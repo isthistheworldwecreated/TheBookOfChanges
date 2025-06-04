@@ -1,0 +1,50 @@
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QVBoxLayout, QWidget, QTextEdit
+import _1_main
+import io
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Fortune Telling App")
+        self.setGeometry(100, 100, 600, 400)
+        self.setupUi()
+
+    def setupUi(self):
+        layout = QVBoxLayout()
+
+        self.generate_button = QPushButton("Generate Fortune")
+        self.generate_button.clicked.connect(self.on_generate)
+
+        self.text_output = QTextEdit()
+        self.text_output.setReadOnly(True)
+
+        self.text_input_question = QTextEdit()
+        self.text_input_question.setPlaceholderText("Enter your question here...")
+
+        layout.addWidget(self.generate_button)
+        layout.addWidget(self.text_output)
+        layout.addWidget(self.text_input_question)
+
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+    def on_generate(self):
+        # 捕获print输出
+        buffer = io.StringIO()
+        sys_stdout = sys.stdout
+        sys.stdout = buffer
+        question = self.text_input_question.toPlainText()
+        try:
+            _1_main.DoTheFortuneTelling(question)
+        finally:
+            sys.stdout = sys_stdout
+        result = buffer.getvalue()
+        self.text_output.setPlainText(result)
+
+if __name__ == "__main__":
+    import sys
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

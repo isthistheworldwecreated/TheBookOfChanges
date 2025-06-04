@@ -2,9 +2,9 @@ import random
 import time
 
 
-def generateNumbers():
+def generateNumbers(question):
     timeString = time.asctime()
-    question = input("Your question please: ")
+    #question = input("Your question please: ")
 
     questionTransformSeed = timeString + question
     random.seed(questionTransformSeed)
